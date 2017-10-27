@@ -748,8 +748,9 @@ PStatePlay.prototype.createWorld = function(){
     // This set the rendering layer of the tilemap and turn on collisions for the tiles placed in the layer
     this.loadTileMapCollisionLayer(ga.layerBottom,"collisionLayer");
 
-    var worldMap=this.tileMapBackgroundLayer["map"];
-    ga.phaserGame["world"]["setBounds"]( 0, 0, worldMap["width"]*worldMap["tileWidth"], worldMap["height"]*worldMap["tileHeight"])
+    var worldMap = this.tileMapBackgroundLayer["map"];
+    ga.phaserGame["world"]["setBounds"](0, 0, worldMap["width"] * worldMap["tileWidth"], worldMap["height"] * worldMap["tileHeight"]);
+
 };
 
 PStatePlay.prototype.createHudBar = function(frameKey, barKey,barX, barY, maxNumber, initialValue) {
@@ -1276,46 +1277,43 @@ var myClassLoader = function() {   // DEVELOPER_CODE REMOVE_FOR_THEME
                 );
 
                 // Shoot if player is nearby every 3 seconds
-                var shootPeriod = 3, iIsWhat = 6;
+                var shootPeriod = 3;
                 if (distanceToPlayer < 350) {
                     // Shoot
                     if (parseInt(ga.phaserGame["time"]["totalElapsedSeconds"]()) % shootPeriod === 0 && !monster["shoot"]) {
                         if (playerSprite["body"]["x"] < monster["body"]["x"] || playerSprite["body"]["x"] > monster["body"]["x"]) {
                             monster["shoot"] = true;
                             var speedX = monster["body"]["velocity"]["x"];
-                            if(ga.statePlay["x"]<ga.groupMonster["x"])
+                            if (ga.statePlay.player["x"]<monster["x"])
                             {
-                                speedX=-(Math.abs(speedX))*4;
+                                speedX = -(Math.abs(speedX) * 4);
                             }
-                            if(ga.statePlay["x"]>ga.groupMonster["x"])
-                            {
-                                speedX=Math.abs(speedX)*4;
+                            if (ga.statePlay.player["x"]>monster["x"]){
+                                speedX = Math.abs(speedX) * 4;
                             }
 
-                            var speedY=monster["body"]["velocity"]["y"];
-                            if(ga.statePlay["y"]<ga.groupMonster["y"])
-                            {
-                                speedY=Math.abs(speedY)*4;
+                            var speedY = monster["body"]["velocity"]["y"];
+                            if (ga.statePlay["y"]<monster["y"]){
+                                speedY = Math.abs(speedY) * 4;
                             }
-                            if(ga.statePlay["y"]>ga.groupMonster["y"])
-                            {
-                                speedY=-(Math.abs(speedY)*4);
+                            else if (ga.statePlay["y"]>monster["y"]){
+                                speedY = -(Math.abs(speedY) * 4);
                             }
                             var attackX = ((playerSprite["body"]["x"] < monster["body"]["x"]) ? -1 : 1) * monster["body"]["x"];
-                            var attackY = ((playerSprite["body"]["y"] < monster["body"]["y"]) ? -1 : 1) * monster["body"]["y"]+30;
+                            var attackY = ((playerSprite["body"]["y"] < monster["body"]["y"]) ? -1 : 1) * (monster["body"]["y"] + 30);
                             var chance = Math.floor(Math.random() * 2);
                             ga.groupMonsterBullet.createBullet(
-                                attackX, attackY , ga.enemyAttackSpriteKey,speedX,speedY,ga.groupMonsterBullet.bulletTravelDistance
+                                attackX, attackY, ga.enemyAttackSpriteKey, speedX, speedY, ga.groupMonsterBullet.bulletTravelDistance
                             );
                             ga.groupMonsterBullet.createBullet(
-                                attackX, attackY, ga.enemyAttackSpriteKey, speedX,(chance===1) ? -90:90,ga.groupMonsterBullet.bulletTravelDistance
+                                attackX, attackY, ga.enemyAttackSpriteKey, speedX, (chance === 1) ? -90 : 90, ga.groupMonsterBullet.bulletTravelDistance
                             );
                         }
                     }
                 }
 
                 // kill bullets every 3 seconds
-                if (parseInt(ga.phaserGame["time"]["totalElapsedSeconds"]()) % iIsWhat === 0) {
+                if (parseInt(ga.phaserGame["time"]["totalElapsedSeconds"]()) % shootPeriod === 0) {
                     if (ga.groupMonsterBullet.getGroup() > 0) {
                         ga.groupMonsterBullet.getGroup().forEach(function (bullet) {
                             bullet["kill"]();
